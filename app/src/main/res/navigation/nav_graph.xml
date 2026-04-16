@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/expensesFragment">
+
+    <!-- Écran 1 : Liste des dépenses -->
+    <fragment
+        android:id="@+id/expensesFragment"
+        android:name="ma.fstt.smartbuget.ui.expenses.ExpensesFragment"
+        android:label="Dépenses" />
+
+    <!-- Écran 2 : Statistiques -->
+    <fragment
+        android:id="@+id/statsFragment"
+        android:name="ma.fstt.smartbuget.ui.stats.StatsFragment"
+        android:label="Statistiques" />
+
+    <!-- Écran 3 : Paramètres -->
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="ma.fstt.smartbuget.ui.settings.SettingsFragment"
+        android:label="Paramètres" />
+
+    <!-- Écran modal : Formulaire Ajout/Modification -->
+    <fragment
+        android:id="@+id/expenseFormFragment"
+        android:name="ma.fstt.smartbuget.ui.expenses.ExpensesFragment"
+        android:label="Dépense" />
+
+</navigation>

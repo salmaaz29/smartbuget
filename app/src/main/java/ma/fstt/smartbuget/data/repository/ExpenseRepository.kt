@@ -5,7 +5,7 @@ import ma.fstt.smartbuget.data.dao.CategoryTotal
 import ma.fstt.smartbuget.data.dao.ExpenseDao
 import ma.fstt.smartbuget.data.entity.Expense
 
-class ExpenseRepository {
+
     class ExpenseRepository(private val expenseDao: ExpenseDao) {
 
         fun getExpensesByMonth(start: Long, end: Long): LiveData<List<Expense>> =
@@ -40,4 +40,3 @@ class ExpenseRepository {
 
 
     }
-}
