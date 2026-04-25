@@ -1,116 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#F5F5F5">
 
+    <!-- Header navigation mois -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#6200EE"
+        android:padding="12dp">
 
-        <!-- Header navigation mois -->
+        <ImageButton
+            android:id="@+id/btnPreviousMonth"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@android:drawable/ic_media_previous"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/tvCurrentMonth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Avril 2026"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <ImageButton
+            android:id="@+id/btnNextMonth"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@android:drawable/ic_media_next"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="#FFFFFF" />
+
+    </LinearLayout>
+
+    <!-- Carte total -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="#6200EE"
-            android:padding="12dp">
-
-            <ImageButton
-                android:id="@+id/btnPreviousMonth"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@android:drawable/ic_media_previous"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:tint="#FFFFFF"/>
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:gravity="center"
+            android:background="#6200EE">
 
             <TextView
-                android:id="@+id/tvCurrentMonth"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Mars 2026"
+                android:text="Total du mois"
+                android:textColor="#CCFFFFFF"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/tvTotalMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.00 MAD"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:textSize="30sp"
                 android:textStyle="bold"/>
 
-            <ImageButton
-                android:id="@+id/btnNextMonth"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@android:drawable/ic_media_next"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:tint="#FFFFFF"/>
         </LinearLayout>
 
-        <!-- Carte Total du mois -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
+    </androidx.cardview.widget.CardView>
+
+    <!-- Titre section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Répartition par catégorie"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="#212121"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Liste stats -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewStats"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="16dp"
+        android:clipToPadding="false"/>
+
+    <!-- État vide -->
+    <LinearLayout
+        android:id="@+id/layoutEmptyStats"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            android:backgroundTint="#6200EE">
+            android:text="📊"
+            android:textSize="48sp"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp"
-                android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aucune dépense ce mois"
+            android:textSize="16sp"
+            android:textColor="#9E9E9E"
+            android:layout_marginTop="8dp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Total du mois"
-                    android:textColor="#CCFFFFFF"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tvTotalMonth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0.00 MAD"
-                    android:textColor="#FFFFFF"
-                    android:textSize="32sp"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Liste des stats par catégorie -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewStats"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="8dp"/>
-
-        <!-- État vide -->
-        <LinearLayout
-            android:id="@+id/layoutEmptyStats"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="😕"
-                android:textSize="48sp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Aucune dépense ce mois"
-                android:textSize="16sp"
-                android:textColor="#9E9E9E"
-                android:layout_marginTop="8dp"/>
-        </LinearLayout>
     </LinearLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</LinearLayout>

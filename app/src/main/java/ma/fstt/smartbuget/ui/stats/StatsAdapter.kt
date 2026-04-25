@@ -25,7 +25,8 @@ class StatsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StatViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_stat, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_stat, parent, false)
         return StatViewHolder(view)
     }
 
@@ -33,7 +34,8 @@ class StatsAdapter(
         val categoryTotal = categoryTotals[position]
         val category = categories.find { it.id == categoryTotal.categoryId } ?: return
 
-        val percentage = if (totalMonth > 0) (categoryTotal.total / totalMonth * 100).toInt() else 0
+        val percentage = if (totalMonth > 0)
+            (categoryTotal.total / totalMonth * 100).toInt() else 0
 
         holder.tvIcon.text = category.icon
         holder.tvCategoryName.text = category.name
@@ -44,7 +46,11 @@ class StatsAdapter(
 
     override fun getItemCount() = categoryTotals.size
 
-    fun updateData(newTotals: List<CategoryTotal>, newCategories: List<Category>, newTotal: Double) {
+    fun updateData(
+        newTotals: List<CategoryTotal>,
+        newCategories: List<Category>,
+        newTotal: Double
+    ) {
         categoryTotals = newTotals
         categories = newCategories
         totalMonth = newTotal
