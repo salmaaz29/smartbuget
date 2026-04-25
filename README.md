@@ -104,7 +104,7 @@ ma.fstt.smartbuget/
 
 | Dépenses | Statistiques | Paramètres |
 |---|---|---|
-| ![Dépenses](#) | ![Stats](#) | ![Paramètres](#) |
+| ![Dépenses](images/Dépenses.png) | ![Stats](images/Stats.png) | ![Paramètres](images/Paramètres.png) |
 
 ---
 
