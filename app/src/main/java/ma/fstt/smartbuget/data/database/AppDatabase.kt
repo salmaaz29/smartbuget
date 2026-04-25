@@ -8,6 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ma.fstt.smartbuget.data.TestDataSeeder
 import ma.fstt.smartbuget.data.dao.CategoryDao
 import ma.fstt.smartbuget.data.dao.ExpenseDao
 import ma.fstt.smartbuget.data.entity.Category
@@ -46,7 +47,13 @@ abstract class AppDatabase : RoomDatabase() {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 CoroutineScope(Dispatchers.IO).launch {
+                    // Insérer catégories par défaut
                     populateDatabase(database.categoryDao())
+                    // Insérer données de test
+                    TestDataSeeder.seedIfEmpty(
+                        database.categoryDao(),
+                        database.expenseDao()
+                    )
                 }
             }
         }

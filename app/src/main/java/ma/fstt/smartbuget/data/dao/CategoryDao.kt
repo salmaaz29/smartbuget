@@ -43,4 +43,8 @@ interface CategoryDao {
     // Vérifier si une catégorie a des dépenses
     @Query("SELECT COUNT(*) FROM expenses WHERE categoryId = :categoryId")
     suspend fun countExpensesByCategory(categoryId: Int): Int
+
+    // Récupérer toutes les catégories sans LiveData (pour le seeder)
+    @Query("SELECT * FROM categories ORDER BY name ASC")
+    suspend fun getAllCategoriesOnce(): List<Category>
 }
