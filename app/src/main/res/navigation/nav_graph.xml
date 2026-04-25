@@ -4,28 +4,28 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/expensesFragment">
 
-    <!-- Écran 1 : Liste des dépenses -->
     <fragment
         android:id="@+id/expensesFragment"
         android:name="ma.fstt.smartbuget.ui.expenses.ExpensesFragment"
-        android:label="Dépenses" />
+        android:label="Dépenses">
+        <action
+            android:id="@+id/action_expenses_to_form"
+            app:destination="@id/expenseFormFragment" />
+    </fragment>
 
-    <!-- Écran 2 : Statistiques -->
+    <fragment
+        android:id="@+id/expenseFormFragment"
+        android:name="ma.fstt.smartbuget.ui.expenses.ExpenseFormFragment"
+        android:label="Ajouter une dépense" />
+
     <fragment
         android:id="@+id/statsFragment"
         android:name="ma.fstt.smartbuget.ui.stats.StatsFragment"
         android:label="Statistiques" />
 
-    <!-- Écran 3 : Paramètres -->
     <fragment
         android:id="@+id/settingsFragment"
         android:name="ma.fstt.smartbuget.ui.settings.SettingsFragment"
         android:label="Paramètres" />
-
-    <!-- Écran modal : Formulaire Ajout/Modification -->
-    <fragment
-        android:id="@+id/expenseFormFragment"
-        android:name="ma.fstt.smartbuget.ui.expenses.ExpensesFragment"
-        android:label="Dépense" />
 
 </navigation>

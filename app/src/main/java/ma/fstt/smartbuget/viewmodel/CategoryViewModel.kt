@@ -9,26 +9,21 @@ import ma.fstt.smartbuget.data.repository.CategoryRepository
 
 class CategoryViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: CategoryRepository
-
-    // Toutes les catégories actives (pour le formulaire et filtres)
-    val activeCategories: LiveData<List<Category>>
-
-    // Toutes les catégories (pour l'écran Paramètres)
-    val allCategories: LiveData<List<Category>>
-
-    // Message d'erreur (ex: suppression refusée)
-    private val _errorMessage = MutableLiveData<String?>()
-    val errorMessage: LiveData<String?> = _errorMessage
-
-    init {
+    private val repository: CategoryRepository by lazy {
         val dao = AppDatabase.getDatabase(application).categoryDao()
-        repository = CategoryRepository(dao)
-        activeCategories = repository.allActiveCategories
-        allCategories = repository.allCategories
+        CategoryRepository(dao)
     }
 
-    // ── CRUD ─────────────────────────────────────────────
+    val activeCategories: LiveData<List<Category>> by lazy {
+        repository.allActiveCategories
+    }
+
+    val allCategories: LiveData<List<Category>> by lazy {
+        repository.allCategories
+    }
+
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> = _errorMessage
 
     fun addCategory(category: Category) = viewModelScope.launch {
         try {
@@ -49,8 +44,7 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
     fun deleteCategory(category: Category) = viewModelScope.launch {
         val deleted = repository.delete(category)
         if (!deleted) {
-            _errorMessage.value =
-                "Impossible de supprimer : des dépenses utilisent cette catégorie"
+            _errorMessage.value = "Impossible de supprimer : des dépenses utilisent cette catégorie"
         }
     }
 

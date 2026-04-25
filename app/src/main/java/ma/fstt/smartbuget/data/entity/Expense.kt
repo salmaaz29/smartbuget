@@ -1,6 +1,5 @@
 package ma.fstt.smartbuget.data.entity
 
-import androidx.compose.material3.FloatingActionButton
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index

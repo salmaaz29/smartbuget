@@ -10,54 +10,54 @@ import java.util.*
 
 class ExpenseViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: ExpenseRepository
+    private val repository: ExpenseRepository by lazy {
+        val dao = AppDatabase.getDatabase(application).expenseDao()
+        ExpenseRepository(dao)
+    }
 
-    // Mois actuellement affiché (Calendar)
     private val _currentCalendar = MutableLiveData(Calendar.getInstance())
     val currentCalendar: LiveData<Calendar> = _currentCalendar
 
-    // Catégorie filtrée (null = toutes)
     private val _selectedCategoryId = MutableLiveData<Int?>(null)
-    val selectedCategoryId: LiveData<Int?> = _selectedCategoryId
 
-    // Dépenses du mois en cours
-    val expenses: LiveData<List<Expense>>
-
-    // Total du mois
-    val totalByMonth: LiveData<Double>
-
-    init {
-        val dao = AppDatabase.getDatabase(application).expenseDao()
-        repository = ExpenseRepository(dao)
-
-        // Calcule start/end du mois courant
-        val (start, end) = getMonthRange(Calendar.getInstance())
-
-        expenses = repository.getExpensesByMonth(start, end)
-        totalByMonth = repository.getTotalByMonth(start, end)
+    private val filterTrigger = MediatorLiveData<Pair<Calendar, Int?>>().apply {
+        addSource(_currentCalendar) { cal ->
+            value = Pair(cal, _selectedCategoryId.value)
+        }
+        addSource(_selectedCategoryId) { catId ->
+            value = Pair(_currentCalendar.value ?: Calendar.getInstance(), catId)
+        }
     }
 
-    // ── Navigation mois ──────────────────────────────────
+    val expenses: LiveData<List<Expense>> = filterTrigger.switchMap { (cal, categoryId) ->
+        val (start, end) = getMonthRange(cal)
+        if (categoryId == null) {
+            repository.getExpensesByMonth(start, end)
+        } else {
+            repository.getExpensesByMonthAndCategory(start, end, categoryId)
+        }
+    }
+
+    val totalByMonth: LiveData<Double> = _currentCalendar.switchMap { cal ->
+        val (start, end) = getMonthRange(cal)
+        repository.getTotalByMonth(start, end).map { it ?: 0.0 }
+    }
 
     fun goToPreviousMonth() {
-        val cal = _currentCalendar.value ?: return
+        val cal = _currentCalendar.value?.clone() as? Calendar ?: return
         cal.add(Calendar.MONTH, -1)
         _currentCalendar.value = cal
     }
 
     fun goToNextMonth() {
-        val cal = _currentCalendar.value ?: return
+        val cal = _currentCalendar.value?.clone() as? Calendar ?: return
         cal.add(Calendar.MONTH, 1)
         _currentCalendar.value = cal
     }
 
-    // ── Filtre catégorie ─────────────────────────────────
-
     fun selectCategory(categoryId: Int?) {
         _selectedCategoryId.value = categoryId
     }
-
-    // ── CRUD ─────────────────────────────────────────────
 
     fun addExpense(expense: Expense) = viewModelScope.launch {
         repository.insert(expense)
@@ -71,42 +71,29 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
         repository.delete(expense)
     }
 
-    suspend fun getExpenseById(id: Int): Expense? {
-        return repository.getById(id)
-    }
-
-    // ── Utilitaire : calcul début/fin de mois ────────────
+    suspend fun getExpenseById(id: Int): Expense? = repository.getById(id)
 
     fun getMonthRange(calendar: Calendar): Pair<Long, Long> {
         val cal = calendar.clone() as Calendar
-
-        // Début du mois : 1er jour à 00:00:00
         cal.set(Calendar.DAY_OF_MONTH, 1)
         cal.set(Calendar.HOUR_OF_DAY, 0)
         cal.set(Calendar.MINUTE, 0)
         cal.set(Calendar.SECOND, 0)
         cal.set(Calendar.MILLISECOND, 0)
         val start = cal.timeInMillis
-
-        // Fin du mois : dernier jour à 23:59:59
         cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH))
         cal.set(Calendar.HOUR_OF_DAY, 23)
         cal.set(Calendar.MINUTE, 59)
         cal.set(Calendar.SECOND, 59)
         val end = cal.timeInMillis
-
         return Pair(start, end)
     }
 
-    // ── Nom du mois affiché (ex: "Mars 2026") ────────────
-
     fun getMonthLabel(calendar: Calendar): String {
         val months = listOf(
-            "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-            "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+            "Janvier","Février","Mars","Avril","Mai","Juin",
+            "Juillet","Août","Septembre","Octobre","Novembre","Décembre"
         )
-        val month = months[calendar.get(Calendar.MONTH)]
-        val year = calendar.get(Calendar.YEAR)
-        return "$month $year"
+        return "${months[calendar.get(Calendar.MONTH)]} ${calendar.get(Calendar.YEAR)}"
     }
 }

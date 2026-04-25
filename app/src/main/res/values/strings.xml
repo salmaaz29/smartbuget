@@ -1,3 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">smartbuget</string>
+
+    <string name="app_name">SmartBudget</string>
+
+    <!-- Modes de paiement pour le formulaire -->
+    <string-array name="payment_methods">
+        <item>Espèce</item>
+        <item>Carte bancaire</item>
+        <item>Virement</item>
+    </string-array>
+
 </resources>

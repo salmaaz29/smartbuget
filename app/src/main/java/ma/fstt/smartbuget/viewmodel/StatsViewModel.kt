@@ -9,39 +9,37 @@ import java.util.Calendar
 
 class StatsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: ExpenseRepository
+    private val repository: ExpenseRepository by lazy {
+        val dao = AppDatabase.getDatabase(application).expenseDao()
+        ExpenseRepository(dao)
+    }
 
     private val _currentCalendar = MutableLiveData(Calendar.getInstance())
     val currentCalendar: LiveData<Calendar> = _currentCalendar
 
-    // Totaux par catégorie du mois
-    val categoryTotals: LiveData<List<CategoryTotal>>
+    val categoryTotals: LiveData<List<CategoryTotal>> = _currentCalendar.switchMap { cal ->
+        val (start, end) = getMonthRange(cal)
+        repository.getTotalByCategoryForMonth(start, end)
+    }
 
-    // Total général du mois
-    val monthTotal: LiveData<Double>
-
-    init {
-        val dao = AppDatabase.getDatabase(application).expenseDao()
-        repository = ExpenseRepository(dao)
-
-        val (start, end) = getMonthRange(Calendar.getInstance())
-        categoryTotals = repository.getTotalByCategoryForMonth(start, end)
-        monthTotal = repository.getTotalByMonth(start, end)
+    val monthTotal: LiveData<Double> = _currentCalendar.switchMap { cal ->
+        val (start, end) = getMonthRange(cal)
+        repository.getTotalByMonth(start, end).map { it ?: 0.0 }
     }
 
     fun goToPreviousMonth() {
-        val cal = _currentCalendar.value ?: return
+        val cal = _currentCalendar.value?.clone() as? Calendar ?: return
         cal.add(Calendar.MONTH, -1)
         _currentCalendar.value = cal
     }
 
     fun goToNextMonth() {
-        val cal = _currentCalendar.value ?: return
+        val cal = _currentCalendar.value?.clone() as? Calendar ?: return
         cal.add(Calendar.MONTH, 1)
         _currentCalendar.value = cal
     }
 
-    private fun getMonthRange(calendar: Calendar): Pair<Long, Long> {
+    fun getMonthRange(calendar: Calendar): Pair<Long, Long> {
         val cal = calendar.clone() as Calendar
         cal.set(Calendar.DAY_OF_MONTH, 1)
         cal.set(Calendar.HOUR_OF_DAY, 0)

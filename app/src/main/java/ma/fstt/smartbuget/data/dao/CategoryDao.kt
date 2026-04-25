@@ -11,36 +11,36 @@ import ma.fstt.smartbuget.data.entity.Category
 
 @Dao
 interface CategoryDao {
-    // Récupération des catégories actives
-    @Query("SELECT * FROM categories WHERE isActivate = 1 ORDER BY name ASC")
-    fun getActivateCategories(): LiveData<List<Category>>
 
-    // Recuperation de toutes les categories
+    // Récupérer les catégories actives (pour formulaire et liste)
+    @Query("SELECT * FROM categories WHERE isActivate = 1 ORDER BY name ASC")
+    fun getActiveCategories(): LiveData<List<Category>>
+
+    // Récupérer TOUTES les catégories (pour paramètres)
     @Query("SELECT * FROM categories ORDER BY name ASC")
     fun getAllCategories(): LiveData<List<Category>>
 
-    // recuperer categorie par id
-    @Query("SELECT * FROM categories WHERE id =:id")
-    fun getCategoryById(id: Int): Category?
+    // Récupérer une catégorie par ID
+    @Query("SELECT * FROM categories WHERE id = :id")
+    suspend fun getCategoryById(id: Int): Category?
 
-    //Ajouter une categorie
+    // Ajouter une catégorie
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertCategory(category: Category): Long
 
-    //Modifier categorie
+    // Modifier une catégorie
     @Update
     suspend fun updateCategory(category: Category)
 
-    //Activer ou deactiver une categorie
-    @Query("UPDATE categories SET isActivate = :isActivate WHERE id = :id")
-    suspend fun setCategoryActive(id: Int, isActivate: Boolean)
+    // Activer / Désactiver une catégorie
+    @Query("UPDATE categories SET isActivate = :isActive WHERE id = :id")
+    suspend fun setCategoryActive(id: Int, isActive: Boolean)
 
-    //supprimer une categorie
+    // Supprimer une catégorie
     @Delete
     suspend fun deleteCategory(category: Category)
 
-    // verifier si categorie a des depenses avant de supprimer
-    @Query("SELECT COUNT(*) FROM expenses WHERE categoryId = :categoryID")
-    suspend fun countExpensesByCategory(categoryID: Int): Int
-    fun getActiveCategories(): LiveData<List<Category>>
+    // Vérifier si une catégorie a des dépenses
+    @Query("SELECT COUNT(*) FROM expenses WHERE categoryId = :categoryId")
+    suspend fun countExpensesByCategory(categoryId: Int): Int
 }

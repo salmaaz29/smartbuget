@@ -73,11 +73,9 @@ class ExpensesFragment : Fragment() {
             navigateToForm(null)
         }
 
-        // Observer mois courant
+        // CORRECTION : Observer mois courant (on ne fait qu'afficher le label du mois)
         expenseViewModel.currentCalendar.observe(viewLifecycleOwner) { cal ->
             tvMonth.text = expenseViewModel.getMonthLabel(cal)
-            val (start, end) = expenseViewModel.getMonthRange(cal)
-            expenseViewModel.expenses
         }
 
         // Observer dépenses
@@ -94,7 +92,8 @@ class ExpensesFragment : Fragment() {
 
         // Observer total
         expenseViewModel.totalByMonth.observe(viewLifecycleOwner) { total ->
-            tvTotal.text = String.format("%.2f MAD", total)
+            // CORRECTION : On gère le cas où le total est null (0.00 MAD)
+            tvTotal.text = String.format("%.2f MAD", total ?: 0.0)
         }
 
         // Observer catégories
@@ -130,7 +129,6 @@ class ExpensesFragment : Fragment() {
     }
 
     private fun navigateToForm(expense: Expense?) {
-        // On passera l'ID de la dépense (ou -1 si nouveau)
         val bundle = Bundle()
         bundle.putInt("expenseId", expense?.id ?: -1)
         findNavController().navigate(R.id.expenseFormFragment, bundle)
