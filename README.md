@@ -83,6 +83,7 @@ SQLite (local)
 ---
 
 ## 📁 Structure du projet
+```bash
 ma.fstt.smartbuget/
 ├── data/
 │   ├── dao/              → Requêtes Room (CategoryDao, ExpenseDao)
@@ -96,6 +97,7 @@ ma.fstt.smartbuget/
 │   └── settings/         → Écran paramètres
 ├── viewmodel/            → ViewModels (Expense, Category, Stats)
 └── MainActivity.kt       → Activité principale + navigation
+```
 ---
 
 ## 📸 Captures d'écran
@@ -104,15 +106,13 @@ ma.fstt.smartbuget/
 |---|---|---|
 | ![Dépenses](#) | ![Stats](#) | ![Paramètres](#) |
 
-> *(Remplace les # par tes vraies captures d'écran)*
-
 ---
 
 ## 🚀 Installation
 
 1. Clone le repository :
 ```bash
-git clone https://github.com/TON_USERNAME/SmartBudget.git
+git clone https://github.com/salmaaz29/smartbuget.git
 ```
 
 2. Ouvre le projet dans **Android Studio**
