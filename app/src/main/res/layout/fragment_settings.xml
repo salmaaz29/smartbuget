@@ -11,7 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#6200EE"
+        android:background="#C58989"
         android:padding="16dp">
 
         <TextView
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:text="+ Ajouter"
                 android:textSize="13sp"
-                app:backgroundTint="#6200EE"/>
+                app:backgroundTint="#DE6F2C2C"/>
 
         </LinearLayout>
 
